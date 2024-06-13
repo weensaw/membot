@@ -1,0 +1,13 @@
+{
+    "api_id": "27465684",
+    "api_hash": "b942b161976cb6bcf572def96fab766f",
+    "string_session": "1ApWapzMBu1PnJoY0sOQdPso80idaBL0cQYnvcruB0ozvb4WixHtm2C2zvQqMGG4V437BbhVoZzlZYzdljU31xlVxyfd1M0Px5r9VrobmkZO1oi6DO4dl9oYTLSntpMSjR8BISCLz69Myc7Q_lQztJrs8qGgsF_KrlP0_kV5ijQhxq1MtVYolV0WttDiSeDCfnCD3BPH_Fwll-iwuqdmO4N9V8ppC1F4uGxWc005tS9xnX4J7TffE2KgTtdaI_H4c3Wh8aB1aXg3luirkkWgQhJMrBX8s4cw7L_tq3C6V_0BZ0XItOYplOwDQRExDvLUeNuOsBnGkXKjoopQ4QXU2d7gH6sVJSyA=",
+    "source_channel": "@dobrye_kotyatki",
+    "target_channel": "@weensaw_mems",
+    "check_period": 30,
+    "negative_reactions": ["💩", "👎", "🤮"],
+    "positive_reactions": ["❤️", "👍", "🤣", "😂"],
+    "funny_coefficient": 0.8,
+    "spreading_coefficient": 0.10,
+    "involvement_coefficient": 0.75
+  }
