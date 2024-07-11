@@ -27,19 +27,18 @@
    cd mem
 
 2. Создайте файл config.json рядом с Dockerfile и заполните его данными о конфигурации:
-   {
+{
     "api_id": "YOUR_API_ID",
     "api_hash": "YOUR_API_HASH",
-    "check_period": 30,  // Период в минутах для проверки новых сообщений
+    "check_period": 30,
     "string_session": "YOUR_STRING_SESSION",
     "target_channel": "TARGET_CHANNEL_USERNAME",
-    "funny_coefficient": 0.8,  // Коэффициент смешности для фильтрации сообщений
+    "funny_coefficient": 0.8,
     "negative_reactions": ["💩", "👎", "🤮"],
     "positive_reactions": ["❤️", "👍", "🤣", "😂", "🔥", "❤️‍🔥"],
-    "spreading_coefficient": 0.10,  // Минимальный коэффициент вовлеченности для пересылки
-    "involvement_coefficient": 0.75  // Коэффициент вовлеченности
+    "spreading_coefficient": 0.10,
+    "involvement_coefficient": 0.75
 }
-
 ### Запуск
 
 #### Локальная среда
