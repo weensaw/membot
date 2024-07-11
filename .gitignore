@@ -10,3 +10,5 @@ venv/
 # Игнорирование файлов Python
 *.pyc
 __pycache__/
+
+processed_messages.json
