@@ -132,9 +132,15 @@ async def main():
     await client.start()
     logger.info("Client is connected")
 
-    # Retrieve channels from the specified folder
-    source_channels = await get_channels_from_folder('mems')
-    logger.info(f"Found channels in 'mems' folder: {source_channels}")
+    # Retrieve channels from both 'cats' and 'memes' folders
+    cats_channels = await get_channels_from_folder('cats')
+    memes_channels = await get_channels_from_folder('memes')
+
+    # Combine the channels from both folders into one list
+    source_channels = cats_channels + memes_channels
+
+    logger.info(f"Found channels in 'cats' folder: {cats_channels}")
+    logger.info(f"Found channels in 'memes' folder: {memes_channels}")
 
     while True:
         await analyze_and_forward_messages(source_channels)
@@ -143,3 +149,4 @@ async def main():
 if __name__ == "__main__":
     # Run the main coroutine
     client.loop.run_until_complete(main())
+
