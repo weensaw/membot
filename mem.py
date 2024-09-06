@@ -149,4 +149,3 @@ async def main():
 if __name__ == "__main__":
     # Run the main coroutine
     client.loop.run_until_complete(main())
-
