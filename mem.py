@@ -3,6 +3,7 @@ import logging
 import asyncio
 from telethon import TelegramClient
 from telethon.sessions import StringSession
+from telethon.errors import FloodWaitError
 from telethon.tl.types import MessageMediaPhoto, DialogFilter, InputPeerChannel, ReactionEmoji
 from telethon.tl.functions.channels import GetFullChannelRequest
 from telethon.tl.functions.messages import GetDialogFiltersRequest
@@ -36,7 +37,6 @@ try:
     with open(processed_messages_file, 'r') as f:
         processed_messages = json.load(f)
     if isinstance(processed_messages, list):
-        # If the data is a list, reinitialize as an empty dictionary
         processed_messages = {}
 except (FileNotFoundError, json.JSONDecodeError):
     processed_messages = {}
@@ -101,15 +101,23 @@ async def analyze_and_forward_messages():
                         funny_score = positive_count / total_count
 
                         if funny_score >= funny_coefficient and involvement_score >= spreading_coefficient:
-                            await client.send_message(target_channel, message)
-                            logger.info(
-                                f"Reposted photo message {message.id} "
-                                f"from {channel_id} to {target_channel}"
-                            )
-                            processed_messages[channel_id] = message.id
-                            with open(processed_messages_file, 'w') as f:
-                                json.dump(processed_messages, f)
-                            logger.info(f"Updated last processed message ID for {channel_id} to {message.id}")
+                            try:
+                                await client.send_message(target_channel, message)
+                                logger.info(
+                                    f"Reposted photo message {message.id} "
+                                    f"from {channel_id} to {target_channel}"
+                                )
+                                processed_messages[channel_id] = message.id
+                                with open(processed_messages_file, 'w') as f:
+                                    json.dump(processed_messages, f)
+                                logger.info(f"Updated last processed message ID for {channel_id} to {message.id}")
+                                
+                                # Задержка перед отправкой следующего сообщения
+                                await asyncio.sleep(10)  # Установи задержку в секундах между сообщениями
+                            except FloodWaitError as e:
+                                logger.warning(f"FloodWaitError: Подождем {e.seconds} секунд перед повтором.")
+                                await asyncio.sleep(e.seconds)  # Ожидание на основе FloodWaitError
+
                 else:
                     logger.info(f"Message {message.id} has no reactions")
 
