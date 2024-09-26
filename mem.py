@@ -23,17 +23,15 @@ negative_reactions = config['negative_reactions']
 positive_reactions = config['positive_reactions']
 spreading_coefficient = config['spreading_coefficient']
 involvement_coefficient = config['involvement_coefficient']
-meme_age_threshold = 30 * 60  # 30 минут в секундах
-max_messages_to_send = 10  # Количество сообщений для репоста
-send_interval = 20 * 60  # 5 минут в секундах
+meme_age_threshold = config['meme_age_threshold']
+max_messages_to_send = config['max_messages_to_send']
+send_interval = config['send_interval']
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Инициализация клиента
 client = TelegramClient(StringSession(string_session), api_id, api_hash)
 
-# Имя файла для хранения последнего обработанного сообщения
 processed_messages_file = 'processed_messages.json'
 
 # Загрузка ID последних обработанных сообщений
@@ -128,8 +126,8 @@ async def analyze_and_forward_messages():
                             if total_count > 0:
                                 funny_score = positive_count / total_count
                                 logger.info(f"Funny score for message {message.id}: {funny_score}")
-                                
-                                # Добавим логирование условий
+
+                                # Добавим логи
                                 logger.info(f"Checking conditions for reposting: funny_score >= {funny_coefficient} and involvement_score >= {spreading_coefficient}.")
                                 if funny_score >= funny_coefficient and involvement_score >= spreading_coefficient:
                                     # Проверяем лимит отправки сообщений
