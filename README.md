@@ -25,9 +25,11 @@
    ```bash
    git clone https://github.com/your-username/mem.git
    cd mem
+   ```
 
 2. Создайте файл config.json рядом с Dockerfile и заполните его данными о конфигурации:
-{
+   ```json
+   {
     "api_id": "YOUR_API_ID",
     "api_hash": "YOUR_API_HASH",
     "check_period": 30,
@@ -38,27 +40,34 @@
     "positive_reactions": ["❤️", "👍", "🤣", "😂", "🔥", "❤️‍🔥"],
     "spreading_coefficient": 0.10,
     "involvement_coefficient": 0.75
-}
+   }
+   ```
 ### Запуск
 
 #### Локальная среда
 
 1. Установите зависимости:
-
    ```bash
    pip install -r requirements.txt
+   ```
 
 2. Запустите бота:
    ```bash
-
-  python mem.py
+   python mem.py
+   ```
 
 #### Docker
 1. Соберите Docker образ:
+  ```bash
    docker build -t mem .
+  ```
 
-2. Запустите контейнер:
+3. Запустите контейнер:
+   ```bash
    docker run -d --name mem mem
+   ```
 
 #### Логи бота будут выводиться в STDOUT контейнера Docker или в консоль локальной среды. Вы можете просматривать их с помощью:
+   ```bash
    docker logs telegram-bot
+   ```
