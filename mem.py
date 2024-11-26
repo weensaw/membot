@@ -47,6 +47,15 @@ except (FileNotFoundError, json.JSONDecodeError):
 messages_sent = 0
 last_sent_time = time.time()
 
+# Функция для сохранения ID последних обработанных сообщений
+def save_processed_messages():
+    try:
+        with open(processed_messages_file, 'w') as f:
+            json.dump(processed_messages, f)
+        logger.info(f"Updated last processed message ID in {processed_messages_file}")
+    except Exception as e:
+        logger.error(f"Failed to save processed messages: {e}")
+
 async def get_channels_from_folder(folder_name):
     dialog_filters = await client(GetDialogFiltersRequest())
     logger.info(f"Dialog filters: {dialog_filters}")
@@ -72,7 +81,6 @@ async def calculate_involvement_score(channel_info):
     subscribers_count = channel_info.full_chat.participants_count
     involvement_score = subscribers_count * involvement_coefficient
     return involvement_score
-
 
 async def analyze_and_forward_messages():
     global messages_sent, last_sent_time
@@ -124,7 +132,7 @@ async def analyze_and_forward_messages():
                             logger.info(f"Positive count: {positive_count}, Negative count: {negative_count}, Total count: {total_count}")
 
                             if total_count > 0:
-                                funny_score = positive_count / total_count
+                                funny_score = positive_count / float(total_count)  # Приведение для float деления
                                 logger.info(f"Funny score for message {message.id}: {funny_score}")
 
                                 # Добавим логи
@@ -134,15 +142,14 @@ async def analyze_and_forward_messages():
                                     current_time = time.time()
                                     if messages_sent < max_messages_to_send and current_time - last_sent_time >= send_interval:
                                         try:
-                                            await client.send_file(target_channel, message.media, caption="")
+                                            await client.send_file(target_channel, message.media, caption=f"Positive count: {positive_count}, Negative count: {negative_count}, Total count: {total_count}.")
+
                                             messages_sent += 1
                                             logger.info(f"Reposted photo message {message.id} from {channel_id} to {target_channel}")
 
                                             # Обновляем ID последнего обработанного сообщения
                                             processed_messages[channel_id] = message.id
-                                            with open(processed_messages_file, 'w') as f:
-                                                json.dump(processed_messages, f)
-                                            logger.info(f"Updated last processed message ID for {channel_id} to {message.id}")
+                                            save_processed_messages()  # Сохраняем файл с обработанными сообщениями
                                         except FloodWaitError as e:
                                             logger.warning(f"Rate limit exceeded while sending message. Sleeping for {e.seconds} seconds.")
                                             await asyncio.sleep(e.seconds)  # Ждём до конца лимита
@@ -152,7 +159,6 @@ async def analyze_and_forward_messages():
                                         messages_sent = 0  # Сбрасываем счётчик сообщений
                     else:
                         logger.info(f"Message {message.id} has not aged enough.")
-
 
 async def main():
     await client.start()  # запускаем клиент
@@ -164,3 +170,6 @@ async def main():
 
 if __name__ == "__main__":
     client.loop.run_until_complete(main())
+
+
+
